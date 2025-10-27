@@ -40,10 +40,18 @@ export async function POST(req) {
       messages: [{ role: "user", content: prompt }],
     });
 
-    const message = completion.choices[0].message;
+    // Defensive checks in case the completion shape is unexpected
+    const message = completion?.choices?.[0]?.message;
+    if (!message) {
+      return NextResponse.json({
+        success: false,
+        message: "No completion returned from DeepSeek/OpenRouter",
+        debug: completion,
+      });
+    }
     message.timestamp = Date.now();
     data.messages.push(message);
-    data.save();
+    await data.save();
     return NextResponse.json({
       success: true,
       data: message,
@@ -55,5 +63,3 @@ export async function POST(req) {
     });
   }
 }
-
-main();
