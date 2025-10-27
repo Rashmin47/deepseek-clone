@@ -16,7 +16,8 @@ export async function GET(req) {
 
     // Connect to the database and fetch all chats for the user
     await connectDB();
-    const data = await Chat.find(userId);
+    // find expects a filter object — pass { userId }
+    const data = await Chat.find({ userId });
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
