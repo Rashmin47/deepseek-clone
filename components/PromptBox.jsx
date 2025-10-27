@@ -24,6 +24,12 @@ const PromptBox = ({ isLoading, setIsLoading }) => {
       if (!user) {
         return toast.error("Login to send message");
       }
+      if (!selectedChat) {
+        toast.error("Please select a chat before sending a message.");
+        setPrompt(promptCopy);
+        setIsLoading(false);
+        return;
+      }
       if (isLoading) {
         return toast.error("Wait for the previous prompt response");
       }
@@ -72,12 +78,13 @@ const PromptBox = ({ isLoading, setIsLoading }) => {
         };
         setSelectedChat((prev) => ({
           ...prev,
-          messages: [...prev.message, assistantMessage],
+          messages: [...prev.messages, assistantMessage],
         }));
 
         for (let i = 0; i < messageTokens.length; i++) {
           setTimeout(() => {
-            assistantMessage.content = messageTokens.slice(0, i + 1).join(" ");
+            // Join without spaces so characters render normally while animating
+            assistantMessage.content = messageTokens.slice(0, i + 1).join("");
             setSelectedChat((prev) => {
               const updatedMessages = [
                 ...prev.messages.slice(0, -1),
