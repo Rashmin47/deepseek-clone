@@ -35,7 +35,7 @@ export async function POST(req) {
 
     // Call the DeepSeek API to get a chat completion
     const completion = await openai.chat.completions.create({
-      model: "deepseek/deepseek-r1:free",
+      model: "mistralai/mistral-7b-instruct:free",
       store: true,
       messages: [{ role: "user", content: prompt }],
     });
